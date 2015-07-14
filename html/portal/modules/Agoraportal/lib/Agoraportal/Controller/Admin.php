@@ -488,11 +488,11 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
                     'order' => $order,
                     'searchText' => $searchText));
         foreach ($clients as $client) {
-            if ($services[$client['serviceId']]['serviceName'] == 'marsupial') {
+            /*if ($services[$client['serviceId']]['serviceName'] == 'marsupial') {
                 $clients[$client['clientServiceId']]['haveMoodle'] = (ModUtil::apiFunc('Agoraportal', 'user', 'existsServiceInClient', array('clientCode' => $client['clientCode'], 'serviceName' => 'moodle2'))) ? true : false;
             } else {
                 $clients[$client['clientServiceId']]['haveMoodle'] = false;
-            }
+            }*/
             $clients[$client['clientServiceId']]['diskConsume'] = round($client['diskConsume'] / 1024, 2);
             $clients[$client['clientServiceId']]['diskConsumePerCent'] = ($clients[$client['clientServiceId']]['diskSpace'] > 0) ? round(($clients[$client['clientServiceId']]['diskConsume'] / $clients[$client['clientServiceId']]['diskSpace']) * 100, 2) : 0;
             if ($clients[$client['clientServiceId']]['diskSpace'] > 0) {
@@ -841,6 +841,17 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
         $requesttypes = ModUtil::apiFunc('Agoraportal', 'user', 'getAllRequestTypes');
         $requesttypesservices = ModUtil::apiFunc('Agoraportal', 'user', 'getAllRequestTypesServices');
         $modeltypes = ModUtil::apiFunc('Agoraportal', 'user', 'getModelTypes');
+        $services = ModUtil::apiFunc('Agoraportal', 'user', 'getAllServices');
+        foreach ($services as $service) {
+            $validFolder = false;
+            $folder = (isset($agora[$service['serviceName']]['datadir'])) ? $agora[$service['serviceName']]['datadir'] : '';
+            $services[$service['serviceId']]['serverFolder'] = $folder;
+            if (file_exists('../../' . $folder)) {
+                $validFolder = true;
+            }
+            $services[$service['serviceId']]['validFolder'] = $validFolder;
+            $services[$service['serviceId']]['tablesPrefix'] = (isset($agora[$service['serviceName']]['prefix'])) ? $agora[$service['serviceName']]['prefix'] : '';
+        }
 
         return $this->view->assign('siteBaseURL', $this->getVar('siteBaseURL'))
                         ->assign('warningMailsTo', $this->getVar('warningMailsTo'))
@@ -849,6 +860,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
                         ->assign('clientsMailThreshold', $this->getVar('clientsMailThreshold'))
                         ->assign('maxAbsFreeQuota', $this->getVar('maxAbsFreeQuota'))
                         ->assign('maxFreeQuotaForRequest', $this->getVar('maxFreeQuotaForRequest'))
+                        ->assign('services', $services)
                         ->assign('locations', $locations)
                         ->assign('schooltypes', $schooltypes)
                         ->assign('requesttypes', $requesttypes)
@@ -974,32 +986,6 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
         return $this->view->assign('items', $items)
                         ->assign('total', $total)
                         ->fetch('agoraportal_admin_pager.tpl');
-    }
-
-    /**
-     * Display a available services
-     * @author:		Albert Pérez Monfort (aperezm@xtec.cat)
-     * @return:		An array with the available services
-     */
-    public function services() {
-        AgoraPortal_Util::requireAdmin();
-
-        global $agora;
-        // get services
-        $services = ModUtil::apiFunc('Agoraportal', 'user', 'getAllServices');
-        foreach ($services as $service) {
-            $validFolder = false;
-            $folder = (isset($agora[$service['serviceName']]['datadir'])) ? $agora[$service['serviceName']]['datadir'] : '';
-            $services[$service['serviceId']]['serverFolder'] = $folder;
-            if (file_exists('../../' . $folder)) {
-                $validFolder = true;
-            }
-            $services[$service['serviceId']]['validFolder'] = $validFolder;
-            $services[$service['serviceId']]['tablesPrefix'] = (isset($agora[$service['serviceName']]['prefix'])) ? $agora[$service['serviceName']]['prefix'] : '';
-        }
-
-        return $this->view->assign('services', $services)
-                        ->fetch('agoraportal_admin_services.tpl');
     }
 
     /**

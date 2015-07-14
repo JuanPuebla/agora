@@ -3,22 +3,7 @@
 require_once('modules/Agoraportal/lib/Agoraportal/Util.php');
 
 function smarty_function_AgoraportalMenuLinks($params, &$smarty) {
-    global $agora;
-
     // set some defaults
-    if (!isset($params['start'])) {
-        $params['start'] = '[';
-    }
-    if (!isset($params['end'])) {
-        $params['end'] = ']';
-    }
-    if (!isset($params['separator'])) {
-        $params['separator'] = '|';
-    }
-    if (!isset($params['class'])) {
-        $params['class'] = 'z-menuitem-title';
-    }
-
     $clientCode = (isset($params['clientCode'])) ? $params['clientCode'] : '';
 
     // Get the list of services
@@ -84,59 +69,51 @@ function smarty_function_AgoraportalMenuLinks($params, &$smarty) {
 
     // Administrator menu
     if ($isAdmin) {
-        $AgoraportalMenuLinks = '<div>';
-        $AgoraportalMenuLinks .= "<span class=\"" . $params['class'] . "\">" . $params['start'] . " ";
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'clientsList')) . "\">" . __('Llista de clients') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'newClient')) . "\">" . __('Client nou') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'main')) . "\">" . __('Llista de serveis') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'services')) . "\">" . __('Definició de serveis') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'sql')) . "\">" . __('Execució d\'SQL') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'advices')) . "\">" . __('Enviament d\'avisos') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'stats')) . "\">" . __('Estadístiques') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('fitxers', 'user', 'main')) . "\">" . __('Fitxers') . "</a> " . $params['separator'];
+        $AgoraportalMenuLinks = '<ul class="nav nav-pills">';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'main')) . '"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> ' . __('Llista de serveis') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'clientsList')) . '"><span class="glyphicon glyphicon-education" aria-hidden="true"></span> ' . __('Llista de clients') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'requestsList')) . '"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> ' . __('Sol·licituds') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'stats')) . '"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> ' . __('Estadístiques') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('fitxers', 'admin', 'main')) . '"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' . __('Fitxers') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'sql')) . '"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span> ' . __('Execució d\'SQL') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'advices')) . '"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> ' . __('Enviament d\'avisos') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'operations')) . '"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> ' . __('Operacions') . '</a> ';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'queues')) . '"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> ' . __('Cues') . '</a> ';
         if ( $agora['server']['enviroment'] != 'PRO' ) {
-            $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'createBatch')) . "\">" . __('Creació massiva') . "</a> " . $params['separator'];
+            $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'createBatch')) . '"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> ' . __('Creació massiva') . '</a> ';
         }
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'config')) . "\">" . __('Configuració') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'requestsList')) . "\">" . __('Sol·licituds') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'operations')) . "\">" . __('Operacions') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'queues')) . "\">" . __('Cues') . "</a> ";
-        $AgoraportalMenuLinks .= $params['end'] . "</span>\n";
-        $AgoraportalMenuLinks .= '</div>';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'admin', 'config')) . '"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> ' . __('Configuració') . '</a> ';
+        $AgoraportalMenuLinks .= '</ul>';
     }
 
     // user services view menu
     if ($isClient && !$isAdmin) {
-        $AgoraportalMenuLinks .= '<div>';
-        $AgoraportalMenuLinks .= "<span class=\"" . $params['class'] . "\">" . $params['start'] . " ";
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'myAgora')) . "\">" . __('Serveis') . "</a> ";
+        $AgoraportalMenuLinks .= '<ul class="nav nav-pills">';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'myAgora')) . '"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> ' . __('Serveis') . "</a> ";
         if ($isManager && $showFilesManager) {
-            $AgoraportalMenuLinks .= $params['separator'] . " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'files')) . "\">" . __('Gestió de fitxers') . "</a> ";
+            $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'files')) . '"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' . __('Gestió de fitxers') . "</a> ";
         }
         if ($isManager && $showRequests) {
-            $AgoraportalMenuLinks .= $params['separator'] . " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'requests')) . "\">" . __('Altres Sol·licituds') . "</a> ";
+            $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'requests')) . '"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> ' . __('Altres Sol·licituds') . "</a> ";
         }
-        $AgoraportalMenuLinks .= $params['separator'] . " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'managers')) . "\">" . __('Gestors') . "</a> ";
-        $AgoraportalMenuLinks .= $params['separator'] . " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'logs')) . "\">" . __('Accions fetes') . "</a> ";
-        $AgoraportalMenuLinks .= $params['end'] . "</span>\n";
-        $AgoraportalMenuLinks .= '</div>';
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'managers')) . '"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . __('Gestors') . "</a> ";
+        $AgoraportalMenuLinks .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'logs')) . '"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> ' . __('Accions fetes') . "</a> ";
+        $AgoraportalMenuLinks .= '</ul>';
     }
 
     // admin services for users view menu
     if ($isAdmin && isset($params['clientCode'])) {
-        $AgoraportalMenuLinks .= '<div>';
-        $AgoraportalMenuLinks .= "<span class=\"" . $params['class'] . "\">" . $params['start'] . " ";
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'myAgora', array('clientCode' => $clientCode))) . "\">" . __('Serveis') . "</a> " . $params['separator'];
+        $AgoraportalMenuLinks .= '<ul class="nav navbar-nav">';
+        $AgoraportalMenuLinks .= " <li><a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'myAgora', array('clientCode' => $clientCode))) . "\">" . __('Serveis') . "</a> ";
         if ($showFilesManager) {
-            $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'files', array('clientCode' => $clientCode))) . "\">" . __('Gestió de fitxers') . "</a> " . $params['separator'];
+            $AgoraportalMenuLinks .= " <li><a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'files', array('clientCode' => $clientCode))) . "\">" . __('Gestió de fitxers') . "</a> ";
         }
         if ($showRequests) {
-            $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'requests', array('clientCode' => $clientCode))) . "\">" . __('Altres Sol·licituds') . "</a> " . $params['separator'];
+            $AgoraportalMenuLinks .= " <li><a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'requests', array('clientCode' => $clientCode))) . "\">" . __('Altres Sol·licituds') . "</a> ";
         }
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'managers', array('clientCode' => $clientCode))) . "\">" . __('Gestors') . "</a> " . $params['separator'];
-        $AgoraportalMenuLinks .= " <a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'logs', array('clientCode' => $clientCode))) . "\">" . __('Accions fetes') . "</a> ";
-        $AgoraportalMenuLinks .= $params['end'] . "</span>\n";
-        $AgoraportalMenuLinks .= '</div>';
+        $AgoraportalMenuLinks .= " <li><a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'managers', array('clientCode' => $clientCode))) . "\">" . __('Gestors') . "</a> ";
+        $AgoraportalMenuLinks .= " <li><a href=\"" . DataUtil::formatForDisplayHTML(ModUtil::url('agoraPortal', 'user', 'logs', array('clientCode' => $clientCode))) . "\">" . __('Accions fetes') . "</a> ";
+        $AgoraportalMenuLinks .= '</ul>';
     }
 
     return $AgoraportalMenuLinks;

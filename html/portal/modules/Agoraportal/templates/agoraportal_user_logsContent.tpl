@@ -1,21 +1,27 @@
-<div class="pager">
+<nav class="pull-right">
     {$numLogs}
     {gt text=" registres - <b>Pàgines: </b>"}
+    <br/>
+    <ul class="pagination">
     {foreach from=$pags item=pag}
-    {if $pag eq $config.pag} 
-    <b>{$pag}</b>
-    {else}
-    <a href='javascript:logs({$config.init},
-       {if $config.actionCode eq ""}null{else}{$config.actionCode}{/if},
-       {if $config.fromDate eq ""}null{else}"{$config.fromDate}"{/if},
-       {if $config.toDate eq ""}null{else}"{$config.toDate}"{/if},
-       {if $config.uname eq ""}null{else}{$config.uname}{/if},
-       {$pag})'>{$pag}</a>
-    {/if}
+
+        {if $pag eq $config.pag}
+        <li class="active"><a href="#">{$pag}</a>
+        {else}
+        <li>
+        <a href='javascript:logs({$config.init},
+           {if $config.actionCode eq ""}null{else}{$config.actionCode}{/if},
+           {if $config.fromDate eq ""}null{else}"{$config.fromDate}"{/if},
+           {if $config.toDate eq ""}null{else}"{$config.toDate}"{/if},
+           {if $config.uname eq ""}null{else}{$config.uname}{/if},
+           {$pag})'>{$pag}</a>
+        {/if}
+    </li>
     {foreachelse} 0
     {/foreach}
-</div>
-<table class="logtable">
+  </ul>
+</nav>
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>{gt text="Tipus d'acció"}</th>
@@ -28,7 +34,7 @@
     </thead>
     <tbody>
         {foreach from=$logs item=log}
-        <tr class="{cycle values='z-odd,z-even'}" id="formRow_{$log.logId}">
+        <tr id="formRow_{$log.logId}">
             <td class="icon">
                 {if $log.actionCode eq 1}
                 <img class="icon" src="images/icons/medium/db_add.png" alt="log_add" title="log_add"/>

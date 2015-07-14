@@ -328,13 +328,13 @@ class Agoraportal_Controller_User extends Zikula_AbstractController {
                 $logos = '';
 
                 if ($hasDB) {
-                    $logos = "<div style=\"float:left; margin-right:3px;\" class=\"$serviceName\">
+                    $logos = "<div style=\"float:left;\" class=\"$serviceName\">
                                 <a href=\"$link\">
                                     <img src=\"modules/Agoraportal/images/$serviceName.gif\" alt=\"$serviceName\" title=\"$serviceName\" />
                                 </a>
                               </div>";
                 } else {
-                    $logos = "<div style=\"float:left; margin-right:3px;\" class=\"$serviceName\">
+                    $logos = "<div style=\"float:left;\" class=\"$serviceName\">
                                 <img src=\"modules/Agoraportal/images/$serviceName.gif\" alt=\"$serviceName\" title=\"$serviceName\" />
                               </div>";
                 }

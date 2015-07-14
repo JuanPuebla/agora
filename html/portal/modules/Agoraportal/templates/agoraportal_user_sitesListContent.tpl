@@ -1,5 +1,5 @@
 <div class="pager">{$sitesNumber} {gt text="centre/s"} {if $pager neq ''}-{/if} {$pager}</div>
-<table class="z-datatable">
+<table class="table table-hover table-striped">
     <thead>
         <tr>
             <th>{gt text="Nom"}</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         {foreach item=client from=$sites}
-        <tr class="{cycle values="z-odd,z-even"}" id="formRow_{$client.clientId}">
+        <tr id="formRow_{$client.clientId}">
             <td align="left" valign="top">
                  {$client.clientName}
                  {if $client.educat eq 1}

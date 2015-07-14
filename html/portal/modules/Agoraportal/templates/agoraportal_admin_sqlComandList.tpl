@@ -1,17 +1,17 @@
-
+<div class="list-group">
 {foreach from=$comands item=comand}
-<div class="{cycle values="z-odd,z-even"}" id="comandBox_".{$comand.comandId} style="padding:5px;">
+<a href="#" onClick="sqlFunctionUpdate(1, {$comand.comandId})" class="list-group-item clearfix" id="comandBox_".{$comand.comandId}>
      {$comand.description|nl2br}
-     <div style="text-align:right; margin:3px;">
-         <span onClick="javascript:sqlFunctionUpdate(1, {$comand.comandId})">
-             {img modname='core' src='db_add.png' set='icons/extrasmall' __alt="Insereix" __title="Insereix"}
-         </span>
-         <span onClick="javascript:sqlFunctionUpdate(2, {$comand.comandId})">
-             {img modname='core' src='edit.png' set='icons/extrasmall' __alt="Modifica" __title="Modifica"}
-         </span>
-         <span onClick="javascript:sqlComandsUpdate(2, {$comand.comandId})">
-             {img modname='core' src='14_layer_deletelayer.png' set='icons/extrasmall' __alt="Esborra" __title="Esborra"}
-         </span>
-     </div>
- </div>
+     <span class="btn-group pull-right" role="group">
+         <button type="button" class="btn btn-info input-sm"  onClick="sqlFunctionUpdate(2, {$comand.comandId})" title="Modifica">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            <span class="sr-only">Modifica</span>
+         </button>
+         <button type="button" class="btn btn-danger input-sm"  onClick="sqlComandsUpdate(2, {$comand.comandId})" title="Esborra">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <span class="sr-only">Esborra</span>
+         </button>
+     </span>
+ </a>
  {/foreach}
+ </div>

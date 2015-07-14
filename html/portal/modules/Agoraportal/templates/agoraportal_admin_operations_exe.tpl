@@ -1,53 +1,48 @@
 {include file="agoraportal_admin_menu.tpl"}
-<div class="z-admincontainer">
-    <div class="z-adminpageicon">{img modname='core' src='windowlist.png' set='icons/large'}</div>
-    <div style="height:10px;">&nbsp;</div>
-    <h2>{gt text="Operacio a "}{$serviceName}</h2>
-       <br />
-    {gt text="Operació a encuar:"}
-    <pre>
-        {$actionselect}
-    </pre>
-    <div>Prioritat:
-    {if $priority < 0}
-        Nocturna
-    {/if}
-    {$priority}</div>
-    {gt text="Paràmetres de la operació:"}
-    <ul>
-    {foreach key=paramkey item=param from=$params}
-        <li><strong>{$paramkey}</strong> = {$param}</li>
-    {/foreach}
-    </ul>
-
-    {if $which eq "all"}
-    {gt text="S'executa a Tots"}<br/>
-    {/if}
-
-    {gt text="Resultat:"}
-    <div>
-        <table class="z-datatable"><thead>
-                <tr>
-                    <th>{gt text="Usu"}</th>
-                    <th>{gt text="Client"}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {foreach item=client key=id from=$clients}
-                {if $success[$id]}
-                <tr class="{cycle values='ok-odd,ok-even'}">
-                    {else}
-                <tr class="{cycle values='error-odd,error-even'}">
-                    {/if}
-                    <td>
-                        {$prefix}{$client.activedId}
-                    </td>
-                    <td>
-                        <a target="_blank" href="{$client.clientDNS|serviceLink:$serviceName}">{$client.clientName}</a>
-                    </td>
-                </tr>
-                {/foreach}
-            </tbody>
-        </table>
+<h3>{gt text="Operació"} {$actionselect} a {$serviceName}</h3>
+<div class="panel panel-info">
+    <div class="panel-heading">{gt text="Operació a encuar:"} <strong>{$actionselect}</strong></div>
+    <div class="panel-body">
+        <div><strong>Prioritat:</strong>
+            {if $priority < 0} Nocturna {/if} {$priority}
+        </div>
+        <div><strong>{gt text="Paràmetres de la operació:"}</strong>
+            <ul>
+            {foreach key=paramkey item=param from=$params}
+                <li><strong>{$paramkey}</strong> = {$param}</li>
+            {/foreach}
+            </ul>
+        </div>
+        <img src="modules/Agoraportal/images/{$serviceName}.gif" alt="{$serviceName}" title="{$sserviceName}" />
     </div>
 </div>
+
+{if $which eq "all"}
+<div class="alert alert-info">{gt text="S'executa a Tots"}</div>
+{/if}
+
+<label>{gt text="Resultat:"}</label>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>{gt text="Usu"}</th>
+            <th>{gt text="Client"}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach item=client key=id from=$clients}
+        {if $success[$id]}
+        <tr class="success">
+            {else}
+        <tr class="danger">
+            {/if}
+            <td>
+                {$prefix}{$client.activedId}
+            </td>
+            <td>
+                <a target="_blank" href="{$client.clientDNS|serviceLink:$serviceName}">{$client.clientName}</a>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

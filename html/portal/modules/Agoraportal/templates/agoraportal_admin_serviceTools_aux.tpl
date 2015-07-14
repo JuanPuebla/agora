@@ -49,7 +49,7 @@
     {gt text="No s'han trobat eines disponibles."}
 </div>
 {/if}
-<div class="z-warningmsg">
+<div class="alert alert-warning">
     {gt text="ATENCIÓ: No es demana confirmació per portar a terme les accions de la llista."}
 </div>
 </div>

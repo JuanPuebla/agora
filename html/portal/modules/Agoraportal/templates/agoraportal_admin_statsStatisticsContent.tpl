@@ -1,7 +1,7 @@
-<table class="z-datatable">
+<table class="table table-hover table-striped table-condensed">
     <thead>
         {foreach item=centre key=row from=$results}
-        <tr class="{cycle values='z-odd,z-even'}">
+        <tr>
             {foreach item=field key=camp from=$centre}
             {if $row eq '0'}
             <th>
@@ -51,7 +51,7 @@
     <tbody>
         {/if}
         {/foreach}
-        <tr class="{cycle values='z-odd,z-even'}">
+        <tr>
             {foreach item=field key=camp from=$totals}
             {if $camp eq 'clientDNS'}
             {assign var='usuari' value=$field}
@@ -86,9 +86,7 @@
 </table>
 
 {if $error}
-    <div id="chart">
-    <p>{$error}</p>
-    </div>
+    <div id="chart" class="alert alert-danger">{$error}</div>
 {elseif !empty($graph_title)}
     <div id="chart">
         <h3>{$graph_title}</h3>

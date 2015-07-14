@@ -1,5 +1,5 @@
 <div class="pager">{$clientsNumber} {gt text="Serveis"} - {$pager}</div>
-<table class="z-datatable">
+<table class="table table-hover table-striped">
     <thead>
         <tr>
             <th>{gt text="Nom client"}</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         {foreach item=client from=$clients}
-        <tr class="{cycle values="z-odd,z-even"}" id="formRow_{$client.clientId}">
+        <tr id="formRow_{$client.clientId}">
             <td align="left" valign="top">
                  <a href="{modurl modname='Agoraportal' type='user' func='myAgora' clientCode=$client.clientCode}">
                      {$client.clientName}
@@ -49,20 +49,24 @@
                  </div>
              </td>
              <td align="center">
-                 <a href="{modurl modname='Agoraportal' type='admin' func='editClient' clientId=$client.clientId init=$init search=$search searchText=$searchText}">
-                     {img modname='core' src='edit.png' set='icons/extrasmall' __alt="Edita" __title="Edita"}
-                 </a>
-                 {*<a href="{modurl modname='Agoraportal' type='admin' func='deleteClient' clientId=$client.clientId init=$init search=$search searchText=$searchText}">
-                     {img modname='core' src='14_layer_deletelayer.png' set='icons/extrasmall' __alt="Esborra" __title="Esborra"}
-                 </a>*}
+                <div class="btn-group" role="group">
+                    <a class="btn btn-info" href="{modurl modname='Agoraportal' type='admin' func='editClient' clientId=$client.clientId init=$init search=$search searchText=$searchText}" title="Edita">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        <span class="sr-only">Edita</span>
+                    </a>
+                    {*<a class="btn btn-danger" href="{modurl modname='Agoraportal' type='admin' func='deleteClient' clientId=$client.clientId init=$init search=$search searchText=$searchText}" title="Esborra">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span class="sr-only">Esborra</span>
+                    </a>*}
+                </div>
              </td>
          </tr>
          {foreachelse}
          <tr>
              <td colspan="5" align="left">
-                 {gt text="No s'han trobat clients"}
+                <div class="alert alert-warning">{gt text="No s'han trobat clients"}</div>
              </td>
          </tr>
          {/foreach}
-        </tbody>
-    </table>
+    </tbody>
+</table>
