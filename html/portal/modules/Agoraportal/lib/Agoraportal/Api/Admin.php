@@ -297,8 +297,6 @@ class Agoraportal_Api_Admin extends Zikula_AbstractApi {
                 $clientService = ModUtil::apiFunc('Agoraportal', 'user', 'getClientService', array('clientId' => $clientId,
                     'serviceName' => 'nodes'));
                 break;
-            case 'marsupial':
-                return 1;
         }
 
         // Get a DB Id
@@ -689,17 +687,6 @@ class Agoraportal_Api_Admin extends Zikula_AbstractApi {
 
         $zip->close();
 
-        return true;
-    }
-
-    /**
-     * Activate marsupial service.
-     *
-     * @author Albert Pérez Monfort (aperezm@xtec.cat)
-     *
-     * @return 	array with dummy value
-     */
-    private function activeService_marsupial($db, $dbHost, $client, $service, $password) {
         return true;
     }
 

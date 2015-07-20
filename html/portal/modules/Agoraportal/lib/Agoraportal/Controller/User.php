@@ -173,11 +173,7 @@ class Agoraportal_Controller_User extends Zikula_AbstractController {
                 ));
 
         $clientServices = array();
-        $haveMoodle = false;
         foreach ($clientInfo as $info) {
-            if ($services[$info['serviceId']]['serviceName'] == 'moodle2') {
-                $haveMoodle = true;
-            }
             $clientServices[$info['serviceId']] = $info['serviceId'];
         }
 
@@ -192,7 +188,7 @@ class Agoraportal_Controller_User extends Zikula_AbstractController {
         }
 
         foreach ($notsolicitedServices as $notsolicited) {
-            $notsolicitedServices[$notsolicited['serviceId']]['disabled'] = (!$haveMoodle && $notsolicited['serviceName'] == 'marsupial') ? 1 : 0;
+            $notsolicitedServices[$notsolicited['serviceId']]['disabled'] = 0;
         }
 
         // Reverse order
@@ -1157,7 +1153,7 @@ class Agoraportal_Controller_User extends Zikula_AbstractController {
             $clientInfoArray[$oneService['clientServiceId']]['usageArray'] = array('alert' => $alertspace);
         }
 
-        // Get the list of services (intranet, moodle, marsupial)
+        // Get the list of services (intranet, moodle, nodes)
         $services = ModUtil::apiFunc('Agoraportal', 'user', 'getAllServices');
         $requests = ModUtil::apiFunc('Agoraportal', 'user', 'getAllRequests', array('client' => $client[$clientCode]));
         $types = ModUtil::apiFunc('Agoraportal', 'user', 'getAllRequestTypes');

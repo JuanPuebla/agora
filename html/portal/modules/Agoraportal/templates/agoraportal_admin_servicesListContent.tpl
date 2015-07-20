@@ -23,7 +23,7 @@
              </td>
              <td align="left" valign="top" class="codeandname">
                  <a href="{modurl modname='Agoraportal' type='user' func='myAgora' clientCode=$client.clientCode}">{$client.clientName}</a>
-                 {if $client.state eq 1 && $services[$client.serviceId].serviceName neq 'marsupial'}
+                 {if $client.state eq 1}
                  (<a href="{$client.clientDNS|serviceLink:$services[$client.serviceId].serviceName}" target="_blank">{gt text="Entra-hi"}</a> -
                  <a href="{modurl modname='Agoraportal' type='admin' func='listDataDirs' serviceName=$services[$client.serviceId].serviceName activedId=$client.activedId}">{gt text="Fitxers"}</a>)
                  {/if}

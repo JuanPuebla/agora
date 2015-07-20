@@ -249,7 +249,6 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
             if ($modinfo['state'] == 3 && $sendMail == 1) {
                 // We need to know service base URL
                 $mailContent = $this->view->assign('baseURL', $agora['server']['server'] . $agora['server']['base'])
-                        ->assign('baseURLMarsupial', $agora['server']['marsupial'] . $agora['server']['base'])
                         ->assign('serviceName', $serviceName)
                         ->assign('serviceURL', $serviceURL)
                         ->assign('clientName', $clientName)
@@ -510,11 +509,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
                     'order' => $order,
                     'searchText' => $searchText));
         foreach ($clients as $client) {
-            if ($services[$client['serviceId']]['serviceName'] == 'marsupial') {
-                $clients[$client['clientServiceId']]['haveMoodle'] = (ModUtil::apiFunc('Agoraportal', 'user', 'existsServiceInClient', array('clientCode' => $client['clientCode'], 'serviceName' => 'moodle2'))) ? true : false;
-            } else {
-                $clients[$client['clientServiceId']]['haveMoodle'] = false;
-            }
+            $clients[$client['clientServiceId']]['haveMoodle'] = false;
             $clients[$client['clientServiceId']]['diskConsume'] = round($client['diskConsume'] / 1024, 2);
             $clients[$client['clientServiceId']]['diskConsumePerCent'] = ($clients[$client['clientServiceId']]['diskSpace'] > 0) ? round(($clients[$client['clientServiceId']]['diskConsume'] / $clients[$client['clientServiceId']]['diskSpace']) * 100, 2) : 0;
             if ($clients[$client['clientServiceId']]['diskSpace'] > 0) {
@@ -1963,10 +1958,6 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
 
         $services = ModUtil::apiFunc('Agoraportal', 'user', 'getAllServices');
 
-        // remove marsupial service from services array because sql are no necessary in marsupial
-        $service = modUtil::apifunc('Agoraportal', 'user', 'getServiceByName', array('serviceName' => 'marsupial'));
-        unset($services[$service['serviceId']]);
-
         $clients = ModUtil::apiFunc('Agoraportal', 'user', 'getAllClientsAndServices',
                 array('init' => 1, //Default
                     'rpp' => 0, //No pages
@@ -3371,7 +3362,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
         $warningMsgTpl .= "<p>---<br />L'equip del projecte Àgora</p>";
         $warningMsgTpl .= "<p>P.D.: Aquest missatge s'envia automàticament. Si us plau, no el respongueu.</p>";
 
-        // Get available services (currently: intranet, marsupial, moodle)
+        // Get available services (currently: intranet, nodes, moodle)
         $services = ModUtil::apiFunc('Agoraportal', 'user', 'getAllServices');
 
         // Build array with info of the services to check and the path to its file

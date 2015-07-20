@@ -34,10 +34,8 @@
                     </div>
                     {/if}
                 {elseif $client.state eq 1}
-                {if $services[$client.serviceId].serviceName neq 'marsupial'}
                 <strong>{gt text="Accés"}</strong>: <a href="{$client.clientDNS|serviceLink:$services[$client.serviceId].serviceName}">{$client.clientDNS|serviceLink:$services[$client.serviceId].serviceName}</a>
                 <br />
-                {/if}
                 <strong>{gt text="Data d'activació"}</strong>: {$client.timeCreated|dateformat:"%d/%m/%Y"}
                 {if $client.usageArray.maxDiskSpace gt 0}
                 <br />
