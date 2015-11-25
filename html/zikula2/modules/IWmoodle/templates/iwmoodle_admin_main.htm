@@ -12,7 +12,6 @@
                 <th>{gt text="Summary"}</th>
                 <th>{gt text="Type"}</th>
                 <th>{gt text="State"}</th>
-                <th>{gt text="Options"}</th>
             </tr>
         </thead>
         <tbody>
@@ -39,17 +38,6 @@
                         {/if}
                     </div>
                 </td>
-                <td valign="top">
-                    <div name="options_{$courses[courses].id}" id="options_{$courses[courses].id}">
-                        <a href="{modurl modname=IWmoodle type=admin func=usersList id=$courses[courses].id}">{gt text="List"}</a>
-                        <br />
-                        {if $courses[courses].visible eq 0}
-                        <a href="javascript:chgCourseState({$courses[courses].id})">{gt text="Active"}</a>
-                        {else}
-                        <a href="javascript:chgCourseState({$courses[courses].id})">{gt text="Inactive"}</a>
-                        {/if}
-                    </div>
-                </td>						
             </tr>
             {/section}
         </tbody>

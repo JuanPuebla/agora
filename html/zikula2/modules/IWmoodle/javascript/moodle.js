@@ -96,34 +96,6 @@ function showinfo()
     }
 }
 
-function send(valor){
-    var error=false;
-    var f=document.enrole;
-    var i=1;
-    if(valor==1){
-        f.action="index.php?module=IWmoodle&type=admin&func=enrole";
-    }else{
-        var count = 0;
-        for (i=0; i<f.person.options.length; i++) {
-            if (f.person.options[i].selected) {
-                count++;
-            }
-        }
-        if(count == 0){
-            alert(notUsersSelected);
-            error = true;
-        }
-        if(f.role.value == 0 && !error){
-            alert(notRoleSelected);
-            error = true;
-        }
-        f.action="index.php?module=IWmoodle&type=admin&func=update_enrole";
-    }
-    if(!error){
-        f.submit();
-    }		
-}
-
 function chgCourseState(id){
     var pars = "module=IWmoodle&func=chgCourseState&id=" + id;
     var myAjax = new Ajax.Request("ajax.php", 

@@ -1,27 +1,8 @@
 <?php
 
+require_once('modules/IWmoodle/lib/IWmoodle/MoodleDB.php');
+
 class IWmoodle_Api_User extends Zikula_AbstractApi {
-
-    public function connectExtDB($args) {
-        // Security check
-        if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)
-            && !SecurityUtil::checkPermission('IWmoodle::', "::", ACCESS_READ)) {
-            return false;
-        }
-
-        global $ZConfig;
-        $user = $ZConfig['DBInfo']['databases']['moodle2']['user'];
-        $databaseName = $ZConfig['DBInfo']['databases']['moodle2']['dbname'];
-        $userpwd = $ZConfig['DBInfo']['databases']['moodle2']['password'];
-
-        $connect = oci_pconnect($user, $userpwd, $databaseName);
-
-        if (!$connect) {
-            return LogUtil::registerError($this->__f('connectExtDB: No s\'ha pogut connectar al servei <strong>%s</strong>. Paràmetres de depuració: host: %s, dbname: %s, user: %s', array($serviceName, $host, $databaseName, $user)));
-        }
-
-        return $connect;
-    }
 
     /**
      * Get the courses where a user is pre-enroled
@@ -35,7 +16,7 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
+        $user = $args['user'];
         $pntable = DBUtil::getTables();
         $c = $pntable['IWmoodle_column'];
         $where = "$c[uid] = $user";
@@ -86,32 +67,14 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
-        $prefix = ModUtil::getVar('IWmoodle', 'dbprefix');
-        $connect = ModUtil::apiFunc('IWmoodle', 'user', 'connectExtDB');
-        if (!$connect) {
-            return LogUtil::registerError($this->__('The connection to Moodle database has failed.'));
-        }
-        $sql = "SELECT count(*) 
-			FROM $prefix" . "role_assignments,$prefix" . "context 
-			WHERE $prefix" . "role_assignments.userid=$user
-			AND $prefix" . "role_assignments.roleid=$role
-			AND $prefix" . "role_assignments.contextid=$prefix" . "context.id
-			AND $prefix" . "context.instanceid=$course";
-        $results = oci_parse($connect, $sql);
-        $r = oci_execute($results);
-        if (!$r) {
-            oci_close($connect);
-            return LogUtil::registerError($this->__('Error! Could not load items.'));
-        }
-        $array = oci_fetch_row($results);
-        $num = $array[0];
-        oci_close($connect);
-        if ($num > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $user = $args['user'];
+        $role = $args['role'];
+        $course = $args['course'];
+
+        $prefix = MoodleDB::get_prefix();
+        $sql = "SELECT count(*) FROM {$prefix}role_assignments ra, {$prefix}context ctx
+			WHERE ra.userid = $user AND ra.roleid = $role AND ra.contextid = ctx.id AND ctx.instanceid = $course";
+        return MoodleDB::exists($sql);
     }
 
     /**
@@ -125,29 +88,11 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
-        $prefix = ModUtil::getVar('IWmoodle', 'dbprefix');
-        $connect = ModUtil::apiFunc('IWmoodle', 'user', 'connectExtDB');
-        if (!$connect) {
-            return LogUtil::registerError($this->__('The connection to Moodle database has failed.'));
-        }
-        $sql = "SELECT COUNT(*)
-			FROM $prefix" . "user
-			WHERE username='$user'";
 
-        $results = oci_parse($connect, $sql);
-        $r = oci_execute($results);
-        if (!$results) {
-            return false;
-        }
-        $array = oci_fetch_row($results);
-        $num = $array[0];
-        oci_close($connect);
-        if ($num > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $user = $args['user'];
+        $prefix = MoodleDB::get_prefix();
+        $sql = "SELECT COUNT(*) FROM {$prefix}user WHERE username = '$user'";
+        return MoodleDB::exists($sql);
     }
 
     /**
@@ -162,41 +107,19 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
-        $connect = ModUtil::apiFunc('IWmoodle', 'user', 'connectExtDB');
-        if (!$connect) {
-            return LogUtil::registerError($this->__('The connection to Moodle database has failed.'));
-        }
-        $prefix = ModUtil::getVar('IWmoodle', 'dbprefix');
-        if (!isset($role)) {
-            $sql = "SELECT fullname, visible, to_char(summary) as summary
-				FROM $prefix" . "course
-				WHERE $prefix" . "course.id = $args[courseid]";
+        $courseid = $args['courseid'];
+
+        $prefix = MoodleDB::get_prefix();
+        if (!isset($args['role'])) {
+            $sql = "SELECT c.id, fullname, visible, to_char(summary) as summary
+				FROM {$prefix}course c WHERE c.id = $courseid";
         } else {
-            $sql = "SELECT fullname, visible, to_char(summary) as summary, name, $prefix" . "course.id
-				FROM $prefix" . "course, $prefix" . "role
-				WHERE $prefix" . "course.id = $courseid
-				AND $prefix" . "role.id = $role";
+            $role = $args['role'];
+            $sql = "SELECT c.id, c.fullname, c.visible, to_char(c.summary) as summary, r.name as rolename
+				FROM {$prefix}course c, {$prefix}role r
+				WHERE c.id = $courseid AND r.id = $role";
         }
-        $results = oci_parse($connect, $sql);
-        $r = oci_execute($results);
-        if (!$r) {
-            oci_close($connect);
-            return LogUtil::registerError($this->__('Error! Could not load items.'));
-        }
-
-        $array = oci_fetch_array($results);
-        $registre = array('fullname' => $array[0],
-            'visible' => $array[1],
-            'summary' => $array['SUMMARY']);
-
-        if (isset($role)) {
-            $registre = array('rolename' => $array[3],
-                'id' => $array[4]);
-        }
-        oci_close($connect);
-        // Return and array with values
-        return $registre;
+        return MoodleDB::get_record($sql);
     }
 
     /**
@@ -211,30 +134,11 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
-        $connect = ModUtil::apiFunc('IWmoodle', 'user', 'connectExtDB');
-        if (!$connect) {
-            return LogUtil::registerError($this->__('The connection to Moodle database has failed.'));
-        }
-        $prefix = ModUtil::getVar('IWmoodle', 'dbprefix');
-        $sql = "SELECT id, password, auth, mnethostid
-			FROM $prefix" . "user
-			WHERE username='$username'";
+        $username = $args['username'];
 
-        $results = oci_parse($connect, $sql);
-        $r = oci_execute($results);
-        if (!$r) {
-            oci_close($connect);
-            return LogUtil::registerError($this->__('Error! Could not load items.'));
-        }
-        $array = oci_fetch_row($results);
-        $registre = array('id' => $array[0],
-            'password' => $array[1],
-            'auth' => $array[2],
-            'mnethostid' => $array[3]);
-        oci_close($connect);
-        // Return and array with values
-        return $registre;
+        $prefix = MoodleDB::get_prefix();
+        $sql = "SELECT id, password, auth, mnethostid FROM {$prefix}user WHERE username = '$username'";
+        return MoodleDB::get_record($sql);
     }
 
     /**
@@ -249,40 +153,24 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
-        $registres = array();
+
+        $user = $args['user'];
+
         // gets user id from Moodle
-        $user_array = ModUtil::apiFunc('IWmoodle', 'user', 'getuserMDuid', array('username' => $args['user']));
+        $user_array = ModUtil::apiFunc('IWmoodle', 'user', 'getuserMDuid', array('username' => $user));
         $userid = $user_array['id'];
         $prefix = ModUtil::getVar('IWmoodle', 'dbprefix');
-        $username = UserUtil::getVar('uname');
-        $connect = ModUtil::apiFunc('IWmoodle', 'user', 'connectExtDB');
-        if (!$connect) {
-            return LogUtil::registerError($this->__('The connection to Moodle database has failed.'));
-        }
-        $sql = "SELECT $prefix" . "course.id, $prefix" . "role.name as rolename, to_char($prefix" . "course.summary) as summary, $prefix" . "course.fullname
-			FROM $prefix" . "course, $prefix" . "context, $prefix" . "role_assignments, $prefix" . "role
-			WHERE $prefix" . "context.id = $prefix" . "role_assignments.contextid 
-			AND $prefix" . "role_assignments.userid = $userid
-			AND $prefix" . "course.id = $prefix" . "context.instanceid
-			AND  $prefix" . "role.id = $prefix" . "role_assignments.roleid
-			AND $prefix" . "course.visible=1
-			ORDER BY $prefix" . "course.id,$prefix" . "course.fullname";
-        $results = oci_parse($connect, $sql);
-        $r = oci_execute($results);
-        if (!$r) {
-            oci_close($connect);
-            return LogUtil::registerError($this->__('Error! Could not load items.'));
-        }
-        while ($array = oci_fetch_array($results)) {
-            $registres[] = array('id' => $array['ID'],
-                'rolename' => $array['ROLENAME'],
-                'summary' => $array['SUMMARY'],
-                'fullname' => $array['FULLNAME']);
-        }
-        oci_close($connect);
-        // Return and array with values
-        return $registres;
+
+        $prefix = MoodleDB::get_prefix();
+        $sql = "SELECT c.id, r.name as rolename, to_char(c.summary) as summary, c.fullname
+			FROM {$prefix}course c, {$prefix}context ctx, {$prefix}role_assignments ra , {$prefix}role r
+			WHERE ctx.id = ra.contextid
+			AND ra.userid = $userid
+			AND c.id = ctx.instanceid
+			AND  r.id = ra.roleid
+			AND c.visible=1
+			ORDER BY c.id, c.fullname";
+        return MoodleDB::get_records($sql);
     }
 
     /**
@@ -297,7 +185,11 @@ class IWmoodle_Api_User extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('IWmoodle:coursesblock:', "::", ACCESS_READ)) {
             return false;
         }
-        extract($args);
+
+        $user = $args['user'];
+        $course = $args['course'];
+        $role = $args['role'];
+
         $pntable = & DBUtil::getTables();
         $c = $pntable['IWmoodle_column'];
         $where = "$c[uid] = $user AND $c[mcid] = $course	AND $c[role] = $role";
