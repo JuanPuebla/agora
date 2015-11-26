@@ -133,6 +133,10 @@ table.data{
     border: 2px solid #333;
 }
 
+table tr td {
+    vertical-align: top;
+}
+
 .clientInfoBox {
     margin: 25px 20px 0px 20px;
 }
@@ -357,6 +361,10 @@ table.logtable td.autor{
     float: left;
 }
 
+.serviceLogo {
+    margin-right: 5px;
+}
+
 .actions img{
     cursor: pointer;
 }
@@ -428,4 +436,8 @@ li.tab_select span { /* settings for selected tab link */
 
 .fileListRow {
     /*border-bottom: 1px dotted #555;*/
+}
+
+#bar-legend {
+    list-style-type: none;
 }

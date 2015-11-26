@@ -1,9 +1,8 @@
 <div class="form-group">
     <label for="service_sel">Servei</label>
-    <select class="form-control" name="service_sel" id="service_sel" onchange="sqlservicesList(); {$serviceSQL}" style="width:100%;">
-        <option value="0" {if $service_sel eq 0}selected="selected"{/if}>portal</option>
-        {foreach item=service from=$services}
-        <option value="{$service.serviceId}" {if $service_sel eq $service.serviceId}selected="selected"{/if}>{gt text="%s" tag1=$service.serviceName}</option>
+    <select class="form-control" name="service_sel" id="service_sel" onchange="filter_servicesList(); {$actiononchangeservice}" style="width:100%;">
+        {foreach item=service key=serviceId from=$services}
+        <option value="{$serviceId}" {if $service_sel eq $serviceId}selected="selected"{/if}>{gt text="%s" tag1=$service->serviceName}</option>
         {/foreach}
     </select>
 </div>
@@ -11,7 +10,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">{gt text="Selecció de centres"} <span id="reload"></span></div>
     <div class="panel-body">
-        <select class="form-control" name="which" id="which" onchange="sqlservicesList()" style="width:100%;">
+        <select class="form-control" name="which" id="which" onchange="filter_servicesList()" style="width:100%;">
             <option value="all" {if $which neq "selected"}selected="selected"{/if}>{gt text="Tots els centres"}</option>
             <option value="selected" {if $which eq "selected"}selected="selected"{/if}>{gt text="Només els seleccionats"}</option>
         </select>
@@ -22,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label for="order">{gt text="Ordenat per"}</label>
-                <select class="form-control" name="order" id="order" onchange="sqlservicesList()" style="width:100%;">
+                <select class="form-control" name="order" id="order" onchange="filter_servicesList()" style="width:100%;">
                     <option {if $order eq 1}selected{/if} value="1">{gt text="Nom del centre"}</option>
                     <option {if $order eq 3}selected{/if} value="3">{gt text="Id del centre"}</option>
                     <option {if $order eq 4}selected{/if} value="4">{gt text="Codi del centre"}</option>
@@ -45,18 +44,17 @@
                     </div>
                     <div class="form-group">
                         <label for="pilot">Característica:</label>
-                        <select class="form-control" id="pilot" name="pilot" onchange="sqlservicesList()">
+                        <select class="form-control" id="pilot" name="pilot" onchange="filter_servicesList()">
                             <option {if $pilot === 0}selected{/if} value="0">{gt text="Cap"}</option>
                             <option {if $pilot === 'educat'}selected{/if} value="educat">{gt text="Centre Educat"}</option>
-                    <option {if $pilot === 'marsupial'}selected{/if} value="marsupial">{gt text="Té Marsupial"}</option>
                         </select>
-                        <select class="form-control" id="include" name="include" onchange="sqlservicesList()">
+                        <select class="form-control" id="include" name="include" onchange="filter_servicesList()">
                             <option {if $include eq 1}selected{/if} value="1">{gt text="Incloure"}</option>
                             <option {if $include eq 0}selected{/if} value="0">{gt text="Excloure"}</option>
                         </select>
                     </div>
                     <br/>
-                    <button type="button" class="form-control btn btn-primary" onclick="sqlservicesList()">
+                    <button type="button" class="form-control btn btn-primary" onclick="filter_servicesList()">
                     <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filtra</button>
                 </div>
             </div>

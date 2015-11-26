@@ -7,28 +7,22 @@
 </div>
 {else}
 <div class="alert alert-info">
-    {$info.description}
+    {$info->description}
 </div>
 <div class="form-group clearfix" style="display: block; margin-bottom:15px;">
-    <label class="col-sm-4 control-label" for="comments">{$info.userCommentsText}:</label>
+    <label class="col-sm-4 control-label" for="comments">{$info->userCommentsText}:</label>
     <div class="col-sm-8">
         <textarea class="form-control" id="comments" name="comments" rows="3" style="width:100%;"></textarea>
     </div>
 </div>
 
 <div class="text-center">
-    <a class="btn btn-success" href="#" onclick="addRequest();" title="Afegeix">
+    <button type="submit" class="btn btn-success" title="Afegeix">
         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {gt text="Afegeix"}
-    </a>
-    {if $isAdmin}
+    </button>
     <a class="btn btn-danger" href="{modurl modname='Agoraportal' type='user' func='myAgora' clientCode=$client.clientCode}" title="Cancel·la">
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {gt text="Cancel·la"}
     </a>
-    {else}
-    <a class="btn btn-danger" href="{modurl modname='Agoraportal' type='user' func='myAgora'}"  title="Cancel·la">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {gt text="Cancel·la"}
-    </a>
-    {/if}
 </div>
 {/if}
 

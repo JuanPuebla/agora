@@ -6,3 +6,5 @@
         {AgoraportalMenuLinks}
     </div>
 </nav>
+
+{insert name="getstatusmsg"}

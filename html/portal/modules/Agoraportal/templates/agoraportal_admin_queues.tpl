@@ -27,9 +27,8 @@
                 <label for="service_filter">Servei: </label>
                 <select class="form-control" name="service_filter" id="service_filter">
                     <option value="" {if $service_filter === ""}selected="selected"{/if}>Tots</option>
-                    <option value="0" {if $service_filter === 0}selected="selected"{/if}>Portal</option>
                     {foreach item=service from=$services}
-                    <option value="{$service.serviceId}" {if $service_filter === $service.serviceId}selected="selected"{/if}>{gt text="%s" tag1=$service.serviceName}</option>
+                    <option value="{$service->serviceId}" {if $service_filter === $service->serviceId}selected="selected"{/if}>{gt text="%s" tag1=$service->serviceName}</option>
                     {/foreach}
                 </select>
             </div>
@@ -49,11 +48,11 @@
             <br/><br/>
             <div class="form-group">
                 <label for="date_start">{gt text="Des de: "}</label>
-                <input class="form-control" size="15" id="date_start" name="date_start" id="date_start"  value="{$date_start}"/><br/>
+                <input type="datetime" class="form-control" id="date_start" name="date_start" value="{$date_start}" min="2014-01-01"  max="{$smarty.now|date_format:"%Y-%m-%d"}"/>
             </div>
             <div class="form-group">
                 <label for="date_stop">{gt text="Fins a: "}</label>
-                <input class="form-control" size="15" id="date_stop" name="date_stop" id="date_stop" value="{$date_stop}"/><br/>
+                <input type="datetime" class="form-control" id="date_stop" name="date_stop" value="{$date_stop}" min="2014-01-01"  max="{$smarty.now|date_format:"%Y-%m-%d"}"/>
             </div>
             <div class="form-group">
                 <label for="sortby_filter">{gt text="Ordenat per"}: </label>
@@ -191,9 +190,10 @@
                     <tr>
                 {/if}
                     <td>{$row.id}</td>
-                    <td>{$row.operation}</td>
+                    <td>{$row.operation|replace:'script_':''}
+                    </td>
                     <td>
-                        <a target="_blank" href="{$row.clientDNS|serviceLink:$row.serviceName}">
+                        <a href="{modurl modname='Agoraportal' type='user' func='myAgora' clientCode=$row.clientCode}">
                             {$row.clientName}
                         </a></td>
                     <td>
