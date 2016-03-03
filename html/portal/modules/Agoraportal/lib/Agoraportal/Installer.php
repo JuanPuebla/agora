@@ -288,10 +288,10 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                 DBUtil::executeSQL($sql);
 
                 $rows = DBUtil::selectObjectArray('agoraportal_client_services', "dbHost != '' && serviceDB = ''");
-                foreach ($rows as $row) {
-                    $row['serviceDB'] = $row['dbHost'];
-                    DBUtil::updateObjectArray($row, 'clientServiceId');
+                foreach ($rows as $key => $value) {
+                    $rows[$key]['serviceDB'] = $value['dbHost'];
                 }
+                DBUtil::updateObjectArray($rows, 'agoraportal_client_services', 'clientServiceId');
 
             /* IMPORTANT: DBUtil::changeTable elimina els índexos. Cal
              * afegir una comprovació amb DBUtil::metaIndexes per saber
