@@ -1,3 +1,5 @@
+{adminheader}
+
 <script src="modules/Agoraportal/includes/chartjs/Chart.min.js"></script>
 
 {include file="agoraportal_admin_menu.tpl"}
@@ -43,20 +45,8 @@
 <div id="resultsContent"></div>
 <div id="graphsContent"></div>
 
-<div class="panel panel-info">
-    <div class="panel-heading">{gt text="Generar estadístiques"}</div>
-    <div class="panel-body">
-        <form class="form-inline" name="generateForm" id="generateForm">
-            <div class="form-group">
-                <label for="date">{gt text="Data: "}</label>
-                <input type="date" class="form-control" id="date" name="date" min="2000-01-01" max="{$smarty.now|date_format:"%Y-%m-%d"}"/>
-            </div>
-            <input class="form-control btn btn-info" type="button" value="Genera" onclick="statsGenerateStatistics(document.generateForm.date.value)" />
-            <span id="generate" name="generate"></span>
-        </form>
-    </div>
-</div>
-
 <script type="text/javascript">
     window.onload = getServiceStats();
 </script>
+
+{adminfooter}

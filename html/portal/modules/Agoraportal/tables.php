@@ -132,36 +132,6 @@ function Agoraportal_tables() {
     $table['agoraportal_clientType_column_def'] = array('typeId' => "I NOTNULL AUTO PRIMARY",
         'typeName' => "C(100) NOTNULL DEFAULT ''");
 
-    // agoraportal_clientSettings table definition
-    $table['agoraportal_client_settings'] = DBUtil::getLimitedTablename('agoraportal_client_settings');
-    $table['agoraportal_client_settings_column'] = array('settingsId' => 'settingsId',
-        'clientCode' => 'clientCode',
-        'parameter' => 'parameter',
-        'value' => 'value');
-
-    $table['agoraportal_client_settings_column_def'] = array('settingsId' => "I NOTNULL AUTO PRIMARY",
-        'clientCode' => "C(15) NOTNULL DEFAULT ''",
-        'parameter' => "C(100) NOTNULL DEFAULT ''",
-        'value' => "X NOTNULL");
-    // agoraportal_ldap_asynchronous table definition
-    $table['agoraportal_ldap_asynchronous'] = DBUtil::getLimitedTablename('agoraportal_ldap_asynchronous');
-    $table['agoraportal_ldap_asynchronous_column'] = array('ldapId' => 'ldapId',
-        'clientCode' => 'clientCode',
-        'actionType' => 'actionType',
-        'actionResult' => 'actionResult',
-        'valuesLDAP' => 'valuesLDAP',
-        'managerId' => 'managerId',
-        'dateAdded' => 'dateAdded',
-        'lastAttempt' => 'lastAttempt');
-    $table['agoraportal_ldap_asynchronous_column_def'] = array('ldapId' => "I NOTNULL AUTO PRIMARY",
-        'clientCode' => "C(15) NOTNULL DEFAULT ''",
-        'actionType' => "C(15) NOTNULL DEFAULT ''",
-        'actionResult' => "I NOTNULL",
-        'valuesLDAP' => "X NOTNULL",
-        'managerId' => "I NOTNULL",
-        'dateAdded' => "C(20) NOTNULL DEFAULT ''",
-        'lastAttempt' => "C(20) NOTNULL DEFAULT ''");
-
     // agoraportal_client_managers table definition
     $table['agoraportal_client_managers'] = DBUtil::getLimitedTablename('agoraportal_client_managers');
     $table['agoraportal_client_managers_column'] = array('managerId' => 'managerId',

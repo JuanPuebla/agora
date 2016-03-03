@@ -20,7 +20,7 @@ class ServiceType_portal extends ServiceType {
      * Returns Logo (image not available so, returns text)
      * @return string
      */
-    public function get_logo() {
+    public function get_logo($link = false) { // Param is required for compatibility with definition in other classes
         return 'Portal';
     }
 }

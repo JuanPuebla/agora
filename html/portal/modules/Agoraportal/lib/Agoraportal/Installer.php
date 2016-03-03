@@ -245,8 +245,9 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                 $this->updateModelTypesData();
             case '2.0.21':
                 require_once('modules/Agoraportal/lib/Agoraportal/Util.php');
-                $rows = DBUtil::selectObjectArray('agoraportal_modelTypes', "", '', -1, -1, '', null, null, array('keyword','shortcode'));
-                $templates = array();
+                $connection = $this->entityManager->getConnection();
+                $sql = "SELECT keyword, shortcode FROM agoraportal_modelTypes WHERE 1";
+                $rows = $connection->fetchAll($sql);
                 foreach ($rows as $row) {
                     $templates[$row['keyword']] = $row['shortcode'];
                 }
@@ -259,7 +260,7 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                         $client->save();
                     }
                 }
-            case '2.0.22':
+
                 $sql = "ALTER TABLE agoraportal_logs DROP uid;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_modelTypes DROP keyword;";
@@ -268,18 +269,12 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                 DBUtil::executeSQL($sql);
                 $sql = "DROP TABLE agoraportal_requestStates";
                 DBUtil::executeSQL($sql);
-            case '2.0.23':
                 $sql = "ALTER TABLE agoraportal_moodle_stats_month CHANGE users usersactive INT;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_moodle_stats_week CHANGE users usersactive INT;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_nodes_stats_month CHANGE date yearmonth INT;";
                 DBUtil::executeSQL($sql);
-                $sql = "ALTER TABLE agoraportal_intranet_stats_day CHANGE users usersactive INT;";
-                DBUtil::executeSQL($sql);
-                $sql = "ALTER TABLE agoraportal_intranet_stats_day RENAME agoraportal_intranet_stats_month";
-                DBUtil::executeSQL($sql);
-            case '2.0.24':
                 $sql = "ALTER TABLE agoraportal_services DROP version;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_client_services DROP version;";
@@ -288,10 +283,10 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                 DBUtil::executeSQL($sql);
 
                 $rows = DBUtil::selectObjectArray('agoraportal_client_services', "dbHost != '' && serviceDB = ''");
-                foreach ($rows as $row) {
-                    $row['serviceDB'] = $row['dbHost'];
-                    DBUtil::updateObjectArray($row, 'clientServiceId');
+                foreach ($rows as $key => $value) {
+                    $rows[$key]['serviceDB'] = $value['dbHost'];
                 }
+                DBUtil::updateObjectArray($rows, 'agoraportal_client_services', 'clientServiceId');
 
             /* IMPORTANT: DBUtil::changeTable elimina els índexos. Cal
              * afegir una comprovació amb DBUtil::metaIndexes per saber

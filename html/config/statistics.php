@@ -100,19 +100,19 @@ function process_intranet_stats($school, $year, $month, $day, $timestampofmonth)
     $date = $year . $month;
 
     // Consulta que comprova si el registre del mes del centre ja existeix o no
-    $sql = "SELECT yearmonth FROM agoraportal_intranet_stats_month WHERE yearmonth=$date AND clientcode='" . $school['code'] . "'";
+    $sql = "SELECT yearmonth FROM agoraportal_intranet_stats_day WHERE yearmonth=$date AND clientcode='" . $school['code'] . "'";
 
     // Executa la consulta
     $rows = $statsCon->count_rows($sql);
     if ($rows !== false) {
         // INSERT: Si no hi ha cap registre, el crea
         if ($rows == 0) {
-            $sql = "INSERT INTO agoraportal_intranet_stats_month
+            $sql = "INSERT INTO agoraportal_intranet_stats_day
                         (clientcode, yearmonth, clientDNS, total, users, d" . (int) $day . ")
                         VALUES ('" . $school['code'] . "', $date, '" . $school['dns'] . "', $month_usage, $month_users, $day_usage)";
         } else {
             // UPDATE: Si el registre ja existeix, l'actualitza
-            $sql = "UPDATE agoraportal_intranet_stats_month
+            $sql = "UPDATE agoraportal_intranet_stats_day
                         SET total = $month_usage,
                         users = $month_users,
                         d" . (int) $day . " = $day_usage
@@ -816,7 +816,7 @@ function process_nodes_stats($school, $year, $month, $day, $daysofmonth) {
 
 
     // Insert or update stats_month
-    $sql = "SELECT date FROM agoraportal_nodes_stats_month WHERE yearmonth=$yearmonth AND clientcode='" . $school['code'] . "'";
+    $sql = "SELECT yearmonth FROM agoraportal_nodes_stats_month WHERE yearmonth=$yearmonth AND clientcode='" . $school['code'] . "'";
 
     $rows = $statsCon->count_rows($sql);
     if ($rows !== false) {

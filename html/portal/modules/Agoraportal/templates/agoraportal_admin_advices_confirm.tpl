@@ -1,3 +1,5 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
 <h3>{gt text="Envia avisos"}</h3>
 <div class="panel panel-info">
@@ -36,9 +38,8 @@
         {gt text="Tots"}
     {else}
         <ul class="list-unstyled">
-            {foreach item=service key=id from=$sqlClients}
-                {assign var="client" value=$service->client}
-                <li>{$client->clientName}, {$client->clientCode}</li>
+            {foreach item=service key=id from=$services}
+                <li>{$service->client->clientName}, {$service->client->clientCode}</li>
             {/foreach}
         </ul>
     {/if}
@@ -50,9 +51,9 @@
         <input type="hidden" name="which" value="{$which}" />
         {if $which eq "selected"}
         <select name="clients_sel[]" multiple="multiple">
-            {foreach item=service key=id from=$sqlClients}
+            {foreach item=service key=id from=$services}
                 {assign var="client" value=$service->client}
-                <option value="{$client->clientId}" selected>{$client->clientId}</option>
+                <option value="{$service->client->clientId}" selected>{$service->client->clientId}</option>
             {/foreach}
         </select>
         {/if}
@@ -66,3 +67,5 @@
     <input class="btn btn-success" name="confirm" value="{gt text='Sí'}" type="submit" />
     <input class="btn btn-danger" value="{gt text='No'}" type="submit" />
 </form>
+
+{adminfooter}

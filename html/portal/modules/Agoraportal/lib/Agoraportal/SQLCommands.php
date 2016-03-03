@@ -24,6 +24,7 @@ class SQLCommands {
             $command = new SQLCommand($row);
             $commands[$command->comandId] = $command;
         }
+
         return $commands;
     }
 

@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Executa una SQL"}</h3>
     <form name="sqlForm" id="sqlForm" action="index.php?module=Agoraportal&type=admin&func=sql" method="POST">
         <div class="container-fluid">
@@ -79,7 +82,7 @@
                                     <li id="tab_delete" role="presentation" class=""><a href="#msg" onclick="sqlComandsUpdateTab('delete');">DELETE</a></li>
                                     <li id="tab_alter" role="presentation" class=""><a href="#msg" onclick="sqlComandsUpdateTab('alter');">ALTER</a></li>
                                 </ul>
-                                <div id="commandList" style="max-height:250px; width:100%; overflow:auto;">{$comands}</div>
+                                <div id="commandList" style="max-height:450px; overflow:auto;">{$comands}</div>
                             </div>
                         </div>
                     </div>
@@ -90,3 +93,5 @@
             </div>
     </div>
 </form>
+
+{adminfooter}

@@ -65,7 +65,7 @@ function transformClientCode($clientCode, $type = 'letter2num') {
  * @return Array with the schools information
  */
 function getAllSchoolsDBInfo($codeletter = false) {
-    $sql = 'SELECT c.clientId, c.clientCode, cs.activedId, cs.serviceDB, c.clientDNS, s.serviceName, c.clientOldDNS, c.typeId, cs.diskSpace, cs.diskConsume
+    $sql = 'SELECT c.clientId, c.clientCode, cs.activedId, cs.serviceDB, cs.dbHost, c.clientDNS, s.serviceName, c.clientOldDNS, c.typeId, cs.diskSpace, cs.diskConsume
 			FROM agoraportal_clients c, agoraportal_client_services cs, agoraportal_services s
 			WHERE c.clientId = cs.clientId AND cs.serviceId = s.serviceId AND cs.state = "1"
 			ORDER BY c.clientDNS';
@@ -90,7 +90,7 @@ function getAllSchoolsDBInfo($codeletter = false) {
         $values[] = array(
             'id' => $row->activedId,
             'code' => $clientCode,
-            'dbhost' => $row->serviceDB,
+            'dbhost' => $row->dbHost,
             'database' => $row->serviceDB,
             'dns' => $row->clientDNS,
             'type' => $row->typeId,
@@ -175,7 +175,7 @@ function getAllSchools($order = 'school_id', $desc = 'asc', $service='all', $sta
                 'school_typename' => $row->typeName,
                 'school_locationid' => $row->locationId,
                 'school_locationname' => $row->locationName,
-                'dbhost' => $row->serviceDB,
+                'dbhost' => $row->dbHost,
                 'service' => $row->serviceId,
                 'database' => $row->serviceDB,
                 'observations' => $row->observations,
@@ -217,7 +217,7 @@ function getSchoolDBInfo($dns, $codeletter = false) {
         return false;
     }
 
-    $sql = 'SELECT c.clientId, c.clientCode, cs.activedId, cs.serviceDB, c.typeId, s.serviceName, cs.diskSpace, cs.diskConsume
+    $sql = 'SELECT c.clientId, c.clientCode, cs.activedId, cs.serviceDB, cs.dbHost, c.typeId, s.serviceName, cs.diskSpace, cs.diskConsume
 			FROM agoraportal_clients c, agoraportal_client_services cs, agoraportal_services s
 			WHERE c.clientId = cs.clientId AND cs.serviceId = s.serviceId AND cs.state = "1"
 			AND c.clientDNS = "' . $dns . '"';
@@ -232,7 +232,7 @@ function getSchoolDBInfo($dns, $codeletter = false) {
             $service = $row->serviceName;
 
             $value['id_' . $service] = $row->activedId;
-            $value['dbhost_' . $service] = $row->serviceDB;
+            $value['dbhost_' . $service] = $row->dbHost;
             $value['database_' . $service] = $row->serviceDB;
             $value['diskPercent_' . $service] = $diskPercent;
 
@@ -630,12 +630,12 @@ function getServicesToTest($service) {
     $schools = array();
     if ($service == 'nodes') {
         // Get the list of intranets to test
-        $sql = 'SELECT dbHost, min(activedId) as id
+        $sql = 'SELECT serviceDB, min(activedId) as id
                 FROM `agoraportal_client_services` c
                 LEFT JOIN `agoraportal_services` s ON c.serviceId = s.serviceId
                 WHERE serviceName = \'' . $service . '\'
                 AND activedId !=0 AND c.state=1
-                GROUP BY dbHost';
+                GROUP BY serviceDB';
 
         $results = get_rows_from_db($sql);
         if (!$results) {
@@ -678,7 +678,19 @@ function getServicesToTest($service) {
         }
 
         foreach ($results as $row) {
-            $schools[$row->id] = $row->serviceDB;
+            $sql = 'SELECT c.version
+                    FROM `agoraportal_client_services` c
+                    LEFT JOIN `agoraportal_services` s ON c.serviceId = s.serviceId
+                    WHERE s.serviceName = \'' . $service . '\'
+                    AND c.activedId = ' . $row->id . '
+                    AND c.serviceDB = \'' . $row->serviceDB . '\'';
+
+            $results2 = get_rows_from_db($sql);
+            if ($results2 && $row2 = array_shift($results2)) {
+                $schools[$row->id] = array('dbhost' => $row->serviceDB, 'zkversion' => $row2->version);
+            } else {
+                return false;
+            }
         }
     }
 
@@ -729,7 +741,7 @@ function formatBytes($size, $precision = 2) {
  * @param  string $host     host to connect (or db in moodle)
  * @return mixed            created connection already conected
  */
-function get_dbconnection($service, $schoolid = "", $host = "") {
+function get_dbconnection($service, $schoolid = '', $host = '') {
     require_once('env-config.php');
     global $agora;
 
@@ -905,8 +917,10 @@ class agora_dbmanager{
 
     /**
      * Executes a raw query (for inserts and updates)
+     *
      * @param  string $sql query
      * @return mysqli_result with the return
+     * @throws Exception
      */
     public function execute_query($sql) {
         try {
@@ -942,7 +956,7 @@ class agora_dbmanager{
     }
 }
 
-/**** SOME WARPPINGS  ***********/
+/**** SOME WRAPPINGS  ***********/
 
 /**
  * Get rows from Admin database
@@ -963,7 +977,7 @@ function get_rows_from_db($sql) {
 /**
  * Open a connection to the specified Moodle instance and return it
  *
- * @param school        Array with the school information (id and database)
+ * @param $school Array with the school information (id and database)
  *
  * @return A connection handler or FALSE on error.
  */
@@ -1035,10 +1049,10 @@ function isServeiEducatiu()
 /**
  * Calculate filepath for Moodle
  *
- * @param   int database number
- * @return  string instance name
+ * @param string $id_moodle2
+ * @return string instance name
  */
-function get_filepath_moodle($args) {
+function get_filepath_moodle($id_moodle2 = '') {
     global $agora, $school_info;
 
     $filepath = $agora['moodle2']['datadir'];
@@ -1048,13 +1062,17 @@ function get_filepath_moodle($args) {
         $filepath_start = 1;
     }
 
-    // If $filepath_number is not set or it is an empty string, at this point its value
-    // will be 0. In that case, no offset is applied
-    if (empty($filepath_number) || (array_key_exists('filepath_lastmoved', $agora['moodle2']) && $agora['moodle2']['filepath_lastmoved'] < $school_info['id_moodle2'] )  ) {
-        return $filepath . $agora['moodle2']['username'] . $school_info['id_moodle2'];
+    if (empty($id_moodle2)) {
+        $id_moodle2 = $school_info['id_moodle2'];
     }
 
-    $offset = floor($school_info['id_moodle2'] / $filepath_number) + (($school_info['id_moodle2'] % $filepath_number) == 0 ? ($filepath_start - 1) : $filepath_start);
+    // If $filepath_number is not set or it is an empty string, at this point its value
+    // will be 0. In that case, no offset is applied
+    if (empty($filepath_number) || (array_key_exists('filepath_lastmoved', $agora['moodle2']) && $agora['moodle2']['filepath_lastmoved'] < $id_moodle2 )  ) {
+        return $filepath . $agora['moodle2']['username'] . $id_moodle2;
+    }
+
+    $offset = floor($id_moodle2 / $filepath_number) + (($id_moodle2% $filepath_number) == 0 ? ($filepath_start - 1) : $filepath_start);
 
     if ($offset > 0) {
         $offset = (string) $offset; // Ensure there will not be cast issues
@@ -1062,10 +1080,11 @@ function get_filepath_moodle($args) {
         if (array_key_exists('filepath_prefix', $agora['moodle2'])) {
             $filepath_prefix = $agora['moodle2']['filepath_prefix'];
         }
-        $filepath = $filepath . $filepath_prefix .$offset. '/' . $agora['moodle2']['username'] . $school_info['id_moodle2'];
+        $filepath = $filepath . $filepath_prefix .$offset. '/' . $agora['moodle2']['username'] . $id_moodle2;
     } else {
-        $filepath = $filepath . $agora['moodle2']['username'] . $school_info['id_moodle2'];
+        $filepath = $filepath . $agora['moodle2']['username'] . $id_moodle2;
     }
 
     return $filepath;
 }
+
