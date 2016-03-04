@@ -1,11 +1,13 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
 
 {if $execOper}
-<script>
-    window.onload = function() {
+    <script>
+        window.onload = function() {
         operations_execute({/literal}{$execOper}{literal});
-    };
-</script>
+        };
+    </script>
 {/if}
 
 <script>
@@ -85,3 +87,5 @@
 <div id="servicesListContent" name="servicesListContent">
     {$servicesListContent}
 </div>
+
+{adminfooter}
