@@ -699,6 +699,9 @@ class Service extends AgoraBase {
                     if ($return) {
                         $this->add_log(ClientLog::CODE_MODIFY, 'S\'ha aprovat la sol·licitud d\'alta del servei ' . $serviceName);
                     }
+                } else {
+                    // If the service has an activedId, only change the state
+                    $this->state = $newState;
                 }
                 break;
             case Service::STATUS_DENIED:
