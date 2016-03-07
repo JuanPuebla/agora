@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Operacions"}</h3>
 <form name="serviceForm" id="serviceForm" action="index.php?module=Agoraportal&type=admin&func=operations" method="POST">
     <div class="container-fluid">
@@ -12,11 +15,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Descripció</label>
+                    <label>{gt text="Descripció"}</label>
                     <div id="actiondescription" class="alert alert-info"></div>
                 </div>
                 <div class="form-group">
-                    <label for="actionparams">Paràmetres</label>
+                    <label for="actionparams">{gt text="Paràmetres"}</label>
                 </div>
                 <div id="actionparams"></div>
             </div>
@@ -27,7 +30,7 @@
         </div>
         <div class="row form-inline">
             <input name="queue" type="hidden" value="Executa" />
-            <label for="actionparams">Prioritat (Negativa: nocturna): </label>
+            <label for="actionparams">{gt text="Prioritat (Negativa: nocturna):"}</label>
             {html_options style="width:auto;" class="form-control" name="priority" options=$priority_values values=$priority_values selected=0}
             <button type="submit" class="btn btn-primary">
                 <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> {gt text='Posa a la cua'}</button>
@@ -38,3 +41,5 @@
     var actions;
     window.onload = getServiceActions();
 </script>
+
+{adminfooter}

@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Cues"}</h3>
 <div class="panel panel-default">
     <div class="panel-heading">{gt text="Filtra"} <span id="reload"></span></div>
@@ -304,3 +307,4 @@
     </table>
 </div>
 
+{adminfooter}

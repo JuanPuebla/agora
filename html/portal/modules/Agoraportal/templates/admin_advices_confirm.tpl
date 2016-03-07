@@ -1,3 +1,5 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
 <h3>{gt text="Envia avisos"}</h3>
 <div class="panel panel-info">
@@ -66,3 +68,5 @@
     <input class="btn btn-success" name="confirm" value="{gt text='Sí'}" type="submit" />
     <input class="btn btn-danger" value="{gt text='No'}" type="submit" />
 </form>
+
+{adminfooter}

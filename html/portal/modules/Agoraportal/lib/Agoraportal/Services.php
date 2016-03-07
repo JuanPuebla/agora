@@ -754,7 +754,7 @@ class Service extends AgoraBase {
             return false;
         }
 
-        $this->set_serviceDB($result['serviceDB']);
+        $this->serviceDB = $result['serviceDB'];
         $this->save();
 
         $this->add_log(ClientLog::CODE_ADMIN, 'Paraula de pas d\'administració per '.$this->get_servicetype_name() .': '. $password);

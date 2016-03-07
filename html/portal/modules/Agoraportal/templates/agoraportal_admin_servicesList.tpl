@@ -5,7 +5,7 @@
 {if $execOper}
     <script>
         window.onload = function() {
-        operations_execute({/literal}{$execOper}{literal});
+        operations_execute({{$execOper}});
         };
     </script>
 {/if}

@@ -1,3 +1,5 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
 
 <script>
@@ -43,3 +45,5 @@
 <div id="clientsListContent" name="clientsListContent">
     {$clientsListContent}
 </div>
+
+{adminfooter}

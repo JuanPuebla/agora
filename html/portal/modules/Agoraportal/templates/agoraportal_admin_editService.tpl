@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Edita el servei"}</h3>
 <form id="editClientServiceForm" class="form-horizontal" action="{modurl modname='Agoraportal' type='admin' func='updateService'}" method="post" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
@@ -108,3 +111,5 @@
     var autoAnnotations = "{{$service->annotations}}{{gt text='Deixa la base de dades:'}}" + " {{$service->serviceDB}}";
     var autoObservations = "{{$service->observations}}{{gt text='Baixa automàtica del servei per inactivitat durant més de 12 mesos.'}}";
 </script>
+
+{adminfooter}

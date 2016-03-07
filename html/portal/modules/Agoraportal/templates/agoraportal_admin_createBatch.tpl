@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Creació Massiva"}</h3>
 <div class="alert">
     <p>Aquest script crea el servei per als codis de centre que s'indiquin. Punts a tenir en compte:</p>
@@ -66,3 +69,5 @@
         </div>
     </div>
 </form>
+                
+{adminfooter}

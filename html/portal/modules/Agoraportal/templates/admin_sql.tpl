@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Executa una SQL"}</h3>
     <form name="sqlForm" id="sqlForm" action="index.php?module=Agoraportal&type=admin&func=sql" method="POST">
         <div class="container-fluid">
@@ -90,3 +93,5 @@
             </div>
     </div>
 </form>
+
+{adminfooter}

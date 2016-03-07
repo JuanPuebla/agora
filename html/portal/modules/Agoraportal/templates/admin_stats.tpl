@@ -1,3 +1,5 @@
+{adminheader}
+
 <script src="modules/Agoraportal/includes/chartjs/Chart.min.js"></script>
 
 {include file="agoraportal_admin_menu.tpl"}
@@ -60,3 +62,5 @@
 <script type="text/javascript">
     window.onload = getServiceStats();
 </script>
+
+{adminfooter}

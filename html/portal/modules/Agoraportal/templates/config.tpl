@@ -1,4 +1,7 @@
+{adminheader}
+
 {include file="agoraportal_admin_menu.tpl"}
+
 <h3>{gt text="Configura"}</h3>
 <form  class="form-horizontal" enctype="application/x-www-form-urlencoded" method="post" name="config" id="config" action="{modurl modname='Agoraportal' type='admin' func='updateConfig'}">
     <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
@@ -12,7 +15,7 @@
     <div class="form-group">
         <label class="col-sm-4 control-label" for="warningMailsTo">{gt text="Adreces de correu a on s'han d'enviar els missatges relatius al consum del disc"}</label>
         <div class="col-sm-8">
-            <textarea class="form-control" id="warningMailsTo" ="warningMailsTo" rows="3">{$warningMailsTo}</textarea>
+            <textarea class="form-control" id="warningMailsTo" rows="3">{$warningMailsTo}</textarea>
             <div class="alert alert-info">
                 {gt text="Separeu la llista d'adreces per comes."}
             </div>
@@ -297,3 +300,5 @@
         </table>
     </div>
 </div>
+
+{adminfooter}
