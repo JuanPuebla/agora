@@ -259,7 +259,6 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                         $client->save();
                     }
                 }
-            case '2.0.22':
                 $sql = "ALTER TABLE agoraportal_logs DROP uid;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_modelTypes DROP keyword;";
@@ -268,7 +267,6 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                 DBUtil::executeSQL($sql);
                 $sql = "DROP TABLE agoraportal_requestStates";
                 DBUtil::executeSQL($sql);
-            case '2.0.23':
                 $sql = "ALTER TABLE agoraportal_moodle_stats_month CHANGE users usersactive INT;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_moodle_stats_week CHANGE users usersactive INT;";
@@ -279,7 +277,6 @@ class Agoraportal_Installer extends Zikula_AbstractInstaller {
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_intranet_stats_day RENAME agoraportal_intranet_stats_month";
                 DBUtil::executeSQL($sql);
-            case '2.0.24':
                 $sql = "ALTER TABLE agoraportal_services DROP version;";
                 DBUtil::executeSQL($sql);
                 $sql = "ALTER TABLE agoraportal_client_services DROP version;";
