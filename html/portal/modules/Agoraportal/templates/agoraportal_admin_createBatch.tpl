@@ -40,10 +40,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="template">{gt text="Plantilla del servei (només nodes)"}:</label>
+                <label class="col-sm-4 control-label" for="template">{gt text="Plantilla de Nodes"}:</label>
                 <div class="col-sm-8">
                     <select class="form-control" id="template" name="template">
-                        <option value="0">{gt text="Tria un tipus de plantilla..."}</option>
+                        <option value="0">{gt text="Tria una plantilla..."}</option>
                         {foreach item=templ key=code from=$templates}
                             <option {if $template eq $code}selected{/if} value="{$code}">{$templ}</option>
                         {/foreach}

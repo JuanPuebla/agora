@@ -48,7 +48,7 @@
         <p><strong>{gt text="Servei Territorial"}</strong>: {$client->location_name}</p>
         <p><strong>{gt text="Tipus de centre"}</strong>: {$client->type_name}</p>
         {if $client->extraFunc}
-            <p><strong>{gt text="Plantilla del servei"}</strong>: {$client->template_name}</p>
+            <p><strong>{gt text="Plantilla de Nodes"}</strong>: {$client->template_name}</p>
         {/if}
         <p><strong>{gt text="Adreça completa"}</strong>: {$client->clientAddress}, {$client->clientPC} - {$client->clientCity} ({$client->clientCountry})</p>
         {if $client->clientDescription}

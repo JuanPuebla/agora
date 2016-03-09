@@ -86,7 +86,7 @@
                         <div class="alert alert-info">{$service->annotations|nl2br}</div>
                     {/if}
                     {if $service->state eq 1}
-                        <p><strong>{gt text="ActidedId (usu)"}</strong>: {$service->activedId}</p>
+                        <p><strong>{gt text="ActivedId (usu)"}</strong>: {$service->activedId}</p>
                         {if $service->actions}
                             <div>
                                 <strong>{gt text="Accions disponibles:"}</strong>

@@ -77,7 +77,7 @@ function smarty_function_AgoraportalMenuLinks($params, &$smarty) {
             }
         }
         $menu .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'managers', $params)) . '"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . __('Gestors') . "</a> ";
-        $menu .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'logs', $params)) . '"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> ' . __('Accions fetes') . "</a> ";
+        $menu .= ' <li role="presentation"><a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('Agoraportal', 'user', 'logs', $params)) . '"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> ' . __('Registre d\'accions') . "</a> ";
         $menu .= '</ul>';
     }
 
