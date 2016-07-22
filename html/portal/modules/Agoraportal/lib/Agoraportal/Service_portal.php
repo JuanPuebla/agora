@@ -70,7 +70,7 @@ class Service_portal extends Service {
      * @param bool|false $createDB
      * @return false|mysqli
      */
-    public static function getDBConnection($host = false, $dbid = false, $createDB = false) {
+    public static function getDBConnection($host = false, $serviceDB = false, $dbid = false, $createDB = false) {
         global $agora;
 
         $databaseName = $agora['admin']['database'];

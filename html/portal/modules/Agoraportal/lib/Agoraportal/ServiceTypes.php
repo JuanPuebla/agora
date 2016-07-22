@@ -237,7 +237,7 @@ class ServiceType extends AgoraBase {
      * @param bool|false $createDB
      * @return bool|false
      */
-    public function testConnection($host, $dbid, $createDB = false) {
+    public function testConnection($host, $serviceDB, $dbid, $createDB = false) {
         $classname = 'Service_'.$this->serviceName;
         if (!file_exists('modules/Agoraportal/lib/Agoraportal/'.$classname.'.php')) {
             return false;
@@ -246,7 +246,7 @@ class ServiceType extends AgoraBase {
         require_once('modules/Agoraportal/lib/Agoraportal/' . $classname . '.php');
         $createDB = $createDB && $this->serviceName == 'nodes';
 
-        $connect = $classname::getDBConnection($host, $dbid, $createDB);
+        $connect = $classname::getDBConnection($host, $serviceDB, $dbid, $createDB);
         $works = false;
         if ($connect) {
             $works = true;

@@ -74,6 +74,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-4 control-label" for="dbHost">{gt text="Servidor de base de dades"}:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="dbHost" type="text" name="dbHost" size="30" maxlength="30" value="{$service->dbHost}" />
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-4 control-label" for="serviceDB">{gt text="Base de dades"}:</label>
                 <div class="col-sm-8">
                     <input class="form-control" id="serviceDB" type="text" name="serviceDB" size="30" maxlength="30" value="{$service->serviceDB}" />
@@ -109,8 +115,8 @@
     </div>
 </form>
 <script>
-    var confirmDischarge = "{{gt text='Estàs a punt de donar de baixa un servei. Aquesta acció no es pot desfer. N\'estàs completament segur/a?'}}";
-    var autoAnnotations = "{{$service->annotations}}{{gt text='Deixa la base de dades:'}}" + " {{$service->serviceDB}}";
+    var confirmDischarge = "{{gt text='Esteu a punt de donar de baixa un servei. Aquesta acció no es pot desfer. N\'esteu completament segurs?'}}";
+    var autoAnnotations = "{{$service->annotations}}{{gt text='Deixa la base de dades:'}}" + " {{$service->serviceDB}} " + "{{gt text='i el servidor:'}}" + " {{$service->dbHost}} ";
     var autoObservations = "{{$service->observations}}{{gt text='Baixa automàtica del servei per inactivitat durant més de 12 mesos.'}}";
 </script>
 

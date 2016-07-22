@@ -100,7 +100,7 @@ class Service_moodle2 extends Service {
      * @return resource
      * @throws Exception
      */
-    public static function getDBConnection($db, $userid, $createDB = false) {
+    public static function getDBConnection($dbHost, $db, $userid, $createDB = false) {
         global $ZConfig, $agora;
         $user = $agora['moodle2']['userprefix'] . $userid;
         if ($ZConfig['System']['oci_pconnect']) {

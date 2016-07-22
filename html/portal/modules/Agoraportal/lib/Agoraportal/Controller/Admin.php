@@ -68,6 +68,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
 
         $clientServiceId = FormUtil::getPassedValue('clientServiceId', null, 'POST');
         $extraFunc = FormUtil::getPassedValue('extraFunc', null, 'POST');
+        $dbHost = FormUtil::getPassedValue('dbHost', null, 'POST');
         $serviceDB = FormUtil::getPassedValue('serviceDB', null, 'POST');
         $observations = FormUtil::getPassedValue('observations', null, 'POST');
         $annotations = FormUtil::getPassedValue('annotations', null, 'POST');
@@ -97,14 +98,15 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
             }
         }
 
+        $clientService->dbHost = $dbHost;
         $clientService->serviceDB = $serviceDB;
         $clientService->observations = $observations;
         $clientService->annotations = $annotations;
         $clientService->diskSpace = $diskSpace;
 
-        // Autofill serviceDB var with default value. This is a guess. serviceDB should come from web form.
-        if ((is_null($clientService->serviceDB) || empty($clientService->serviceDB)) && (($serviceName == 'intranet') || ($serviceName == 'nodes'))) {
-            $clientService->serviceDB = $agora['intranet']['host'];
+        // Autofill dbHost var with default value. This is a guess. dbHost should come from web form.
+        if ((is_null($clientService->dbHost) || empty($clientService->dbHost)) && (($serviceName == 'intranet') || ($serviceName == 'nodes'))) {
+            $clientService->dbHost = $agora['intranet']['host'];
         }
 
         // Create a var for admin password where to keep it in order to send it by e-mail
@@ -1529,7 +1531,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
                         ->fetch('agoraportal_admin_sql_commandList.tpl');
     }
 
-    public function stats($args) {
+    public function stats() {
         $clients_sel = FormUtil::getPassedValue('clients_sel', array(), 'GETPOST'); // Clients selected
         $service_sel = FormUtil::getPassedValue('service_sel', -1, 'GETPOST'); // Service selected (moodle2, nodes, portal)
         $which = FormUtil::getPassedValue('which', 'all', 'GETPOST');
@@ -2341,6 +2343,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
     public function createBatch() {
         $schoolCodes = FormUtil::getPassedValue('schoolCodes', null, 'POST');
         $service_sel = FormUtil::getPassedValue('service_sel', 5, 'POST');
+        $dbHost = FormUtil::getPassedValue('dbHost', null, 'POST');
         $serviceDB = FormUtil::getPassedValue('serviceDB', null, 'POST');
         $template = FormUtil::getPassedValue('template', null, 'POST');
         $createClient = FormUtil::getPassedValue('createClient', null, 'POST');
@@ -2349,13 +2352,14 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
         $templates = ServiceTemplates::get_all();
 
         return $this->view->assign('schoolCodes', $schoolCodes)
-                        ->assign('service_sel', $service_sel)
-                        ->assign('services', $services)
-                        ->assign('serviceDB', $serviceDB)
-                        ->assign('template', $template)
-                        ->assign('createClient', $createClient)
-                        ->assign('templates', $templates)
-                        ->fetch('agoraportal_admin_createBatch.tpl');
+            ->assign('service_sel', $service_sel)
+            ->assign('services', $services)
+            ->assign('dbHost', $dbHost)
+            ->assign('serviceDB', $serviceDB)
+            ->assign('template', $template)
+            ->assign('createClient', $createClient)
+            ->assign('templates', $templates)
+            ->fetch('agoraportal_admin_createBatch.tpl');
     }
 
     /**
@@ -2369,6 +2373,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
 
         $schoolCodes = FormUtil::getPassedValue('schoolCodes', null, 'POST');
         $service_sel = FormUtil::getPassedValue('service_sel', 0, 'POST');
+        $dbHost = FormUtil::getPassedValue('dbHost', null, 'POST');
         $serviceDB = FormUtil::getPassedValue('serviceDB', null, 'POST');
         $template = FormUtil::getPassedValue('template', null, 'POST');
         $createClient = FormUtil::getPassedValue('createClient', null, 'POST');
@@ -2397,9 +2402,9 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
             return $this->createBatch($args);
         }
 
-        // Autofill serviceDB var with default value. This is a guess. serviceDB should come from web form.
-        if ((is_null($serviceDB) || empty($serviceDB)) && (($serviceName == 'intranet') || ($serviceName == 'nodes'))) {
-            $serviceDB = $agora['intranet']['host'];
+        // Autofill dbHost var with default value. This is a guess. dbHost should come from web form.
+        if ((is_null($dbHost) || empty($dbHost)) && (($serviceName == 'intranet') || ($serviceName == 'nodes'))) {
+            $dbHost = $agora['intranet']['host'];
         }
 
         $clientCodes = explode(',', $schoolCodes);
@@ -2475,6 +2480,7 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
             }
 
             $service = Service::get_by_client_and_service($client->clientId, $serviceTypeId); // Get the object of the service created in step 3
+            $service->dbHost = $dbHost;
             $service->serviceDB = $serviceDB;
             $service->observations = 'Alta automàtica';
             $service->diskSpace = $servicetype->defaultDiskSpace;
@@ -2497,14 +2503,15 @@ class Agoraportal_Controller_Admin extends Zikula_AbstractController {
         }
 
         return $this->view->assign('schoolCodes', $schoolCodes)
-                        ->assign('logo', $servicetype->get_logo())
-                        ->assign('results', $results)
-                        ->assign('success', $success)
-                        ->assign('error', $error)
-                        ->assign('serviceDB', $serviceDB)
-                        ->assign('template', $template)
-                        ->assign('createClient', $createClient)
-                        ->fetch('agoraportal_admin_createBatch_exec.tpl');
+            ->assign('logo', $servicetype->get_logo())
+            ->assign('results', $results)
+            ->assign('success', $success)
+            ->assign('error', $error)
+            ->assign('dbHost', $dbHost)
+            ->assign('serviceDB', $serviceDB)
+            ->assign('template', $template)
+            ->assign('createClient', $createClient)
+            ->fetch('agoraportal_admin_createBatch_exec.tpl');
     }
 
     /**

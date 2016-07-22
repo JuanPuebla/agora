@@ -791,8 +791,7 @@ function process_nodes_stats($school, $year, $month, $day, $daysofmonth) {
         if ($rows == 0) {
             // INSERT
             $sql = "INSERT INTO agoraportal_nodes_stats_day
-                (clientcode, clientDNS, date, total, posts, userstotal, usersactive,
-                usersactivelast30days, usersactivelast90days, diskConsume)
+                (clientcode, clientDNS, date, total, posts, userstotal, usersactive, usersactivelast30days, usersactivelast90days, diskConsume)
                 VALUES ('" . $school['code'] . "', '" . $school['dns'] . "', $date, "
                     . "$numPagesDay, $numPostsDay, " . $users['total'] . ", " . $users['active'] . ", "
                     . $users['activelast30days'] . ", " . $users['activelast90days'] . ", $diskConsume)";
@@ -823,8 +822,7 @@ function process_nodes_stats($school, $year, $month, $day, $daysofmonth) {
         if ($rows == 0) {
         // INSERT
             $sql = "INSERT INTO agoraportal_nodes_stats_month
-                (clientcode, clientDNS, yearmonth, total, posts, userstotal, usersactive,
-                 	lastactivity, diskConsume)
+                (clientcode, clientDNS, yearmonth, total, posts, userstotal, usersactive, lastactivity, diskConsume)
                 VALUES ('" . $school['code'] . "', '" . $school['dns'] . "', $yearmonth, "
                     . "$numPagesTotal, $numPostsTotal, " . $users['total'] . ", " . $users['active'] . ", "
                     . "'$lastActivity', $diskConsume)";

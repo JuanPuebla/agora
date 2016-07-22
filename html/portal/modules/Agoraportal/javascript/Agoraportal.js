@@ -153,7 +153,7 @@ function statsGetStatistics(orderby, clientDNS){
         return;
     }
     if (date_stop < date_start) {
-        Element.update('resultsContent', "Les dates no tenen l'ordre correcte");
+        Element.update('resultsContent', "Les dates no són correctes");
         return;
     }
 

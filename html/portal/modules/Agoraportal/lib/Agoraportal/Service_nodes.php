@@ -26,14 +26,14 @@ class Service_nodes extends Service {
     }
 
     /**
-     * Calculates the activedId and serviceDB (got from twin) or free
+     * Calculates the activedId and dbHost (got from twin) or free
      * @return int activedId
      */
     protected function getDBId() {
         $twin = Service::get_by_client_and_servicename($this->clientId, 'intranet');
         if ($twin && $twin->activedId > 0) {
             $this->activedId = $twin->activedId;
-            $this->serviceDB = $twin->serviceDB;
+            $this->dbHost = $twin->dbHost;
             return $this->activedId;
         }
 
@@ -163,7 +163,7 @@ class Service_nodes extends Service {
      * @param bool|false $createDB
      * @return false|mysqli
      */
-    public static function getDBConnection($host, $dbid, $createDB = false) {
+    public static function getDBConnection($host, $serviceDB, $dbid, $createDB = false) {
         global $agora;
 
         $parts = explode(':', $host, 2);

@@ -287,13 +287,14 @@ class Service extends AgoraBase {
     const STATUS_WITHDRAWN = -3;
     const STATUS_DISABLED = -4;
 
-    protected $clientServiceId; //Id
-    protected $serviceId; //ServiceTypeId
+    protected $clientServiceId; // Id
+    protected $serviceId; // ServiceTypeId
     protected $clientId;
-    protected $serviceDB; // Can be dbhost or oracle instance
+    protected $dbHost;
+    protected $serviceDB;
     protected $description;
     protected $state;
-    protected $activedId; // ID of the database to connect
+    protected $activedId; // ID of the database or schema to connect
     protected $contactName; // Username of the contact that requested the service
     protected $contactProfile; // Profile of the contact that requested the service
     protected $observations;
@@ -809,10 +810,10 @@ class Service extends AgoraBase {
             return $this->connect;
         }
 
-        $this->connect = $this->getDBConnection($this->serviceDB, $this->activedId);
+        $this->connect = $this->getDBConnection($this->dbHost, $this->serviceDB, $this->activedId);
         if (!$this->connect) {
             $servicename = $this->servicetype->serviceName;
-            throw new Exception("No s'ha pogut connectar al servei <strong>$servicename</strong>. Paràmetres de depuració: host: $this->serviceDB, dbid: $this->activedId");
+            throw new Exception("No s'ha pogut connectar al servei <strong>$servicename</strong>. Paràmetres de depuració: dbHost: $this->dbHost, serviceDB: $this->serviceDB, dbid: $this->activedId");
         }
 
         return $this->connect;
@@ -878,10 +879,12 @@ class Service extends AgoraBase {
      * Retrieves the dbConnection, needs to be overwritten
      * @param $host
      * @param $dbid
+     * @param $host
+     * @param $serviceDB
      * @param bool|false $createDB if the database does not exists, created it
      * @return bool
      */
-    public static function getDBConnection($host, $dbid, $createDB = false) {
+    public static function getDBConnection($host, $serviceDB, $dbid, $createDB = false) {
         return false;
     }
 
@@ -996,12 +999,12 @@ class Service extends AgoraBase {
         // Get info of the service from its ID
         $service = $this->get_servicetype();
         $createDB = ModUtil::getVar('Agoraportal', 'createDB');
-        $connects = $service->testConnection($this->serviceDB, $free, $createDB);
+        $connects = $service->testConnection($this->dbHost, $this->serviceDB, $free, $createDB);
 
         if (!$connects) {
             LogUtil::registerError('No s\'ha pogut connectar a la base de dades. '
                 . 'Paràmetres passats a testConnection: servicename: '
-                . $serviceName . ', database: ' . $free . ', host: ' . $this->serviceDB);
+                . $serviceName . ', database: ' . $free . ', dbHost: ' . $this->dbHost . ', serviceDB: ' . $this->serviceDB);
             return false;
         }
 

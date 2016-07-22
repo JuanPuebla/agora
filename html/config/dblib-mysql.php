@@ -116,7 +116,7 @@ function getAllSchoolsDBInfo($codeletter = false) {
  */
 function getAllSchools($order = 'school_id', $desc = 'asc', $service='all', $state='all') {
 
-    require_once('env-config.php');
+    //require_once('env-config.php');
 
     $values = array();
     if (!isset($order) || $order == '') {
@@ -137,7 +137,7 @@ function getAllSchools($order = 'school_id', $desc = 'asc', $service='all', $sta
     $stateSqlText = '';
     if ($state != 'all') {
         if ($serviceSqlText == '') {
-            $stateSqlTex = "state='$state' ";
+            $stateSqlText = "state='$state' ";
         } else {
             $stateSqlText = " AND state='$state' ";
         }
@@ -1010,7 +1010,7 @@ function disconnect_moodle($con) {
  */
 function connect_intranet($school) {
     try {
-        $con = get_dbconnection('intranet', $school['id'], $school['database']);
+        $con = get_dbconnection('intranet', $school['id'], $school['dbhost']);
         return $con;
     } catch (Exception $e) {
         return false;
@@ -1026,7 +1026,7 @@ function connect_intranet($school) {
  */
 function connect_nodes($school) {
     try {
-        $con = get_dbconnection('nodes', $school['id'], $school['database']);
+        $con = get_dbconnection('nodes', $school['id'], $school['dbhost']);
         return $con;
     } catch (Exception $e) {
         return false;
